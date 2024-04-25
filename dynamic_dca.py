@@ -142,7 +142,7 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
         else:
             output.append(
                 f"Hold {asset}, risk {risk} \u2209"
-                f" ({asset_config['buy_risk_min']},{asset_config['buy_risk_max']}) \u222A"
+                f" ({asset_config['buy_risk_min']},{asset_config['buy_risk_max']}) \u222a"
                 f" ({asset_config['sell_risk_min']},{asset_config['sell_risk_max']})."
             )
     return output

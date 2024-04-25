@@ -15,7 +15,7 @@ Environment setup:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt -r requirements-dev.txt
 ```
 
 Update your bank balance:
@@ -34,4 +34,12 @@ Display the dynamic DCA action to take based on your config:
 
 ```bash
 python dynamic_dca.py
+```
+
+## Quality Assurance
+
+Manually run pre-commit:
+
+```bash
+pre-commit run --all-files
 ```

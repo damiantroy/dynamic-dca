@@ -39,7 +39,10 @@ def main():
         logging.debug(f"Getting risk for {asset} ({config['URL']})...")
         response = requests.get(
             config["URL"],
-            headers={"Content-Type": "application/json", "Authorization": secrets["alphasquared"]},
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": secrets["alphasquared"],
+            },
         )
         if response.status_code == 200:
             logging.info(f"Risk for {asset}: {response.json()[config['return']]}")
