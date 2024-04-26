@@ -1,3 +1,4 @@
 [tool.ruff]
 line-length = 110
 indent-width = 4
+exclude = [".venv", ".idea"]
