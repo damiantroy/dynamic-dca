@@ -13,9 +13,8 @@ following config files:
 Environment setup:
 
 ```bash
-python3 -m venv .venv
+make setup
 source .venv/bin/activate
-pip install -r requirements.txt -r requirements-dev.txt
 ```
 
 Update your bank balance:
@@ -36,10 +35,29 @@ Display the dynamic DCA action to take based on your config:
 python dynamic_dca.py
 ```
 
-## Quality Assurance
-
-Manually run pre-commit:
+Or to e-mail the dynamic DCA actions:
 
 ```bash
-pre-commit run --all-files
+python dynamic_dca.py -e
+```
+
+## Development
+
+Development environment setup:
+
+```bash
+make setup-dev
+source .venv/bin/activate
+```
+
+To run unit tests:
+
+```bash
+make test
+```
+
+Manually run pre-commit checks:
+
+```bash
+make validate
 ```
