@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Description: This script updates the bank balance from Up
 import json
 import requests
