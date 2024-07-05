@@ -6,6 +6,7 @@ index is from AlphaSquare, and the bank is an Australian bank named Up.
 Create config files based on the examples in the `config` directory, and edit them. You should have the
 following config files:
 * `config/config.json`
+  * 'buy_reference' is optional.
 * `config/secrets.json`
 
 ## Usage

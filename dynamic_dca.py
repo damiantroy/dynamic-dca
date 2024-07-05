@@ -126,9 +126,11 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
         if asset_config["buy_risk_min"] <= risk <= asset_config["buy_risk_max"]:
             buy_amount = calculate_buy_amount(asset_config, risk, balance)
             output.append(
-                f"Buy ${buy_amount} {asset}, risk {risk} \u2208 ({asset_config['buy_risk_min']},"
-                f"{asset_config['buy_risk_max']})."
+                f"Buy ${buy_amount} {asset}, risk {risk} \u2208 ({asset_config['buy_risk_min']}"
+                f"{asset_config['buy_risk_max']})"
             )
+            if asset_config.get("buy_reference"):
+                output[-1] += f", Ref: {asset_config['buy_reference']}"
         elif asset_config["sell_risk_min"] <= risk <= asset_config["sell_risk_max"]:
             starting_coins = asset_config["starting_coins"]
             sell_percent = calculate_sell_percent(asset_config, risk)
@@ -138,13 +140,13 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
             output.append(
                 f"Sell {sell_percent}% ({sell_coins}) {asset} (cumulatively),"
                 f" leaving {remaining_coins} {asset},"
-                f" risk {risk} \u2208 ({asset_config['sell_risk_min']},{asset_config['sell_risk_max']})."
+                f" risk {risk} \u2208 ({asset_config['sell_risk_min']},{asset_config['sell_risk_max']})"
             )
         else:
             output.append(
                 f"Hold {asset}, risk {risk} \u2209"
                 f" ({asset_config['buy_risk_min']},{asset_config['buy_risk_max']}) \u222a"
-                f" ({asset_config['sell_risk_min']},{asset_config['sell_risk_max']})."
+                f" ({asset_config['sell_risk_min']},{asset_config['sell_risk_max']})"
             )
     return output
 
