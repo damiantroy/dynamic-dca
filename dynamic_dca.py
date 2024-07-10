@@ -126,7 +126,7 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
         if asset_config["buy_risk_min"] <= risk <= asset_config["buy_risk_max"]:
             buy_amount = calculate_buy_amount(asset_config, risk, balance)
             output.append(
-                f"Buy ${buy_amount} {asset}, risk {risk} \u2208 ({asset_config['buy_risk_min']}"
+                f"Buy ${buy_amount} {asset}, risk {risk} \u2208 ({asset_config['buy_risk_min']},"
                 f"{asset_config['buy_risk_max']})"
             )
             if asset_config.get("buy_reference"):
