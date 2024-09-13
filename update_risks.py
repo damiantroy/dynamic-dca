@@ -3,8 +3,7 @@ import json
 import time
 import requests
 import logging
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+import argparse
 
 cache_time = 10 * 60  # 10 minutes
 risk_urls = {
@@ -20,6 +19,17 @@ risk_urls = {
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Update bank balance from Up")
+    parser.add_argument("-v", "--verbose", help="Increase verbosity", action="count", default=0)
+    args = parser.parse_args()
+
+    if args.verbose == 0:
+        logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
+    elif args.verbose == 1:
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+    elif args.verbose >= 2:
+        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+
     # Read in the secrets file
     with open("config/secrets.json") as f:
         secrets = json.load(f)

@@ -17,6 +17,8 @@ class TestUpdateBalance(unittest.TestCase):
         mock_response.status_code = 200
         mock_response.json.return_value = {"data": {"attributes": {"balance": {"value": "100.00"}}}}
 
+        import sys
+        sys.argv = ["update_balance.py"]
         main()
 
         self.assertEqual(mock_file.call_count, 2)

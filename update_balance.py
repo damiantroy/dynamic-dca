@@ -3,11 +3,21 @@
 import json
 import requests
 import logging
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+import argparse
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Update bank balance from Up")
+    parser.add_argument("-v", "--verbose", help="Increase verbosity", action="count", default=0)
+    args = parser.parse_args()
+
+    if args.verbose == 0:
+        logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
+    elif args.verbose == 1:
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+    elif args.verbose >= 2:
+        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+
     # Read token and account ID from secrets.json
     with open("config/secrets.json") as f:
         secrets = json.load(f)

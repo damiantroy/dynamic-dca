@@ -3,8 +3,6 @@ import argparse
 import json
 import logging
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
 
 def get_config():
     """
@@ -154,7 +152,16 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Send email using Postfix")
     parser.add_argument("-e", "--email", help="Send email", action="store_true")
+    parser.add_argument("-v", "--verbose", help="Increase verbosity", action="count", default=0)
     args = parser.parse_args()
+
+    if args.verbose == 0:
+        logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
+    elif args.verbose == 1:
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+    elif args.verbose >= 2:
+        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+
     risk_data, balance, config = get_config()
     output_data = calculate_buy_and_sell_amounts(risk_data, balance, config)
     if args.email:
