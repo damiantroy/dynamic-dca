@@ -4,6 +4,25 @@ import json
 import logging
 
 
+def parse_arguments():
+    """
+    Parse command line arguments.
+    """
+    parser = argparse.ArgumentParser(description="Dynamic DCA")
+    parser.add_argument("-e", "--email", help="email output", action="store_true")
+    parser.add_argument("-v", "--verbose", help="increase output verbosity", action="count", default=0)
+    args = parser.parse_args()
+
+    if args.verbose == 0:
+        logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
+    elif args.verbose == 1:
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+    elif args.verbose >= 2:
+        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+
+    return args
+
+
 def get_config():
     """
     Read the configuration file.
@@ -27,7 +46,7 @@ def calculate_buy_amount(asset_config, risk, balance):
     Returns:
     int: The amount to buy.
     """
-    buy_base = asset_config["buy_base"]
+    buy_min_order = asset_config["buy_min_order"]
     buy_risk_min = asset_config["buy_risk_min"]
     buy_risk_max = asset_config["buy_risk_max"]
     buy_min_percent = asset_config["buy_min_percent"]
@@ -37,7 +56,12 @@ def calculate_buy_amount(asset_config, risk, balance):
     risk_difference = buy_risk_max - risk
     risk_proportion = risk_difference / risk_range
     buy_percentage = (risk_proportion * (buy_max_percent - buy_min_percent)) + buy_min_percent
-    buy_amount = buy_base + balance * (buy_percentage / 100)
+    logging.debug(f"Buy percentage: {buy_percentage}")
+    buy_amount = balance * (buy_percentage / 100)
+    if buy_amount < buy_min_order:
+        logging.debug(f"Buy amount ({buy_amount}) is less than the minimum order ({buy_min_order})")
+        buy_amount = 0
+    logging.debug(f"Buy amount: {buy_amount}")
     return int(buy_amount)
 
 
@@ -116,10 +140,19 @@ def send_email(output, email_config):
 def calculate_buy_and_sell_amounts(risk_data, balance, config):
     """
     Main function to calculate buy and sell amounts for each asset based on their risk and configuration.
+
+    Parameters:
+    risk_data (dict): The risk data.
+    balance (float): The current balance.
+    config (dict): The configuration.
+
+    Returns:
+    list: The list of buy and sell amounts for each asset.
     """
     output = []
 
     for asset, asset_config in config["asset"].items():
+        logging.debug(f"Calculating buy and sell amounts for {asset}...")
         risk = risk_data[asset]["risk"]
         if asset_config["buy_risk_min"] <= risk <= asset_config["buy_risk_max"]:
             buy_amount = calculate_buy_amount(asset_config, risk, balance)
@@ -149,22 +182,15 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
     return output
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Send email using Postfix")
-    parser.add_argument("-e", "--email", help="Send email", action="store_true")
-    parser.add_argument("-v", "--verbose", help="Increase verbosity", action="count", default=0)
-    args = parser.parse_args()
-
-    if args.verbose == 0:
-        logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
-    elif args.verbose == 1:
-        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-    elif args.verbose >= 2:
-        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
-
+def main():
+    args = parse_arguments()
     risk_data, balance, config = get_config()
     output_data = calculate_buy_and_sell_amounts(risk_data, balance, config)
     if args.email:
         send_email(output_data, config["email"])
     else:
         show_output(output_data)
+
+
+if __name__ == "__main__":
+    main()
