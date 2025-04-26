@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script
 import argparse
 import json
 import logging
@@ -10,7 +10,9 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser(description="Dynamic DCA")
     parser.add_argument("-e", "--email", help="email output", action="store_true")
-    parser.add_argument("-v", "--verbose", help="increase output verbosity", action="count", default=0)
+    parser.add_argument(
+        "-v", "--verbose", help="increase output verbosity", action="count", default=0
+    )
     args = parser.parse_args()
 
     if args.verbose == 0:
