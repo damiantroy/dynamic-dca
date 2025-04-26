@@ -1,4 +1,29 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dynamic-dca"
+version = "0.1.0"
+description = "Generate a dynamic DCA buy/sell based on a risk index"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.32.3",
+]
+
+[dependency-groups]
+dev = [
+    "pip>=25.0.1",
+    "pre-commit>=4.2.0",
+]
+
+[project.scripts]
+update_balance = "dynamic_dca.update_balance:main"
+update_risks = "dynamic_dca.update_risks:main"
+dynamic_dca = "dynamic_dca.dynamic_dca:main"
+
 [tool.ruff]
-line-length = 110
+line-length = 100
 indent-width = 4
 exclude = [".venv", ".idea"]

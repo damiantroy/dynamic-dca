@@ -1,9 +1,14 @@
 # dynamic-dca
-Calculate a dynamic DCA buy/sell based on a risk index. It currently has a very specific use case, the risk
-index is from AlphaSquare, and the bank is an Australian bank named Up.
+Calculate a dynamic DCA buy/sell based on a risk index. It currently has a very specific use case,
+where the risk index is from [AlphaSquared](https://alphasquared.io/), and the bank is an Australian
+bank named [Up Bank](https://up.com.au/).
+
+Pre-requisites:
+* Python 3.10+
+* `uv`
 
 ## Config
-Create config files based on the examples in the `config` directory, and edit them. You should have the
+Create config files based on the examples in the `config` directory, and edit them. You need the
 following config files:
 * `config/config.json`
   * 'buy_reference' is optional.
@@ -11,35 +16,28 @@ following config files:
 
 ## Usage
 
-Environment setup:
+To update your bank balance:
 
 ```bash
-make setup
-source .venv/bin/activate
-```
-
-Update your bank balance:
-
-```bash
-python update_balance.py
+uv run update_balance
 ```
 
 Update the risk values:
 
 ```bash
-python update_risks.py
+uv run update_risks
 ```
 
 Display the dynamic DCA action to take based on your config:
 
 ```bash
-python dynamic_dca.py
+uv run dynamic_dca
 ```
 
 Or to e-mail the dynamic DCA actions:
 
 ```bash
-python dynamic_dca.py -e
+uv run dynamic_dca -e
 ```
 
 ## Development
@@ -47,7 +45,7 @@ python dynamic_dca.py -e
 Development environment setup:
 
 ```bash
-make setup-dev
+make install
 source .venv/bin/activate
 ```
 

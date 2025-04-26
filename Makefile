@@ -1,15 +1,10 @@
-setup:
-	python3 -m venv .venv
-	./.venv/bin/pip install -r requirements.txt
-
-setup-dev:
-	python3 -m venv .venv
-	./.venv/bin/pip install -r requirements.txt -r requirements-dev.txt
+install:
+	uv sync
 
 validate:
-	pre-commit run --all-files --config .pre-commit-config.yaml
+	uv run pre-commit run --all-files
 
 test:
-	python -m unittest discover tests/
+	uv run -m unittest discover tests/
 
-PHONY: setup setup-dev pre-commit test
+PHONY: install validate test
