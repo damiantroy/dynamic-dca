@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script
 import json
 import time
 import requests
@@ -6,16 +6,9 @@ import logging
 import argparse
 
 cache_time = 10 * 60  # 10 minutes
-risk_urls = {
-    "BTC": {
-        "URL": "https://alphasquared.io/wp-json/as/v1/latest-risk-value",
-        "return": "latest_risk_value",
-    },
-    "ETH": {
-        "URL": "https://alphasquared.io/wp-json/as/v1/latest-risk-value_ETH",
-        "return": "latest_risk_value_ETH",
-    },
-}
+risk_assets = ["BTC", "ETH"]
+risk_url_template = "https://alphasquared.io/wp-json/as/v1/asset-info?symbol={}"
+risk_return_field = "current_risk"
 
 
 def main():
@@ -43,27 +36,31 @@ def main():
         risk = {}
 
     # Get the risk for each asset
-    for asset, config in risk_urls.items():
+    for asset in risk_assets:
+        risk_url = risk_url_template.format(asset)
         if asset in risk and risk[asset]["updated"] > time.time() - cache_time:
             logging.info(f"Risk for {asset} is up-to-date")
             continue
-        logging.debug(f"Getting risk for {asset} ({config['URL']})...")
+        logging.debug(f"Getting risk for {asset} ({risk_url})...")
         response = requests.get(
-            config["URL"],
+            risk_url,
             headers={
                 "Content-Type": "application/json",
                 "Authorization": secrets["alphasquared"],
+                "User-Agent": "Mozilla/5.0",
             },
         )
         if response.status_code == 200:
-            logging.info(f"Risk for {asset}: {response.json()[config['return']]}")
+            logging.info(f"Risk for {asset}: {response.json()[risk_return_field]}")
             risk[asset] = {
-                "risk": float(response.json()[config["return"]]),
+                "risk": float(response.json()[risk_return_field]),
                 "updated": time.time(),
             }
             risks_updated = True
         else:
-            logging.error(f"Error getting risk for {asset}: {response.status_code}")
+            logging.error(
+                f"Error getting risk for {asset}: {response.status_code}: {response.text}"
+            )
 
     # Write the risk scores to a file
     if risks_updated:

@@ -2,11 +2,11 @@ import unittest
 import json
 from unittest.mock import patch, mock_open
 
-from update_balance import main
+from dynamic_dca.update_balance import main
 
 
 class TestUpdateBalance(unittest.TestCase):
-    @patch("update_balance.requests.get")
+    @patch("dynamic_dca.update_balance.requests.get")
     @patch(
         "builtins.open",
         new_callable=mock_open,
@@ -18,6 +18,7 @@ class TestUpdateBalance(unittest.TestCase):
         mock_response.json.return_value = {"data": {"attributes": {"balance": {"value": "100.00"}}}}
 
         import sys
+
         sys.argv = ["update_balance.py"]
         main()
 

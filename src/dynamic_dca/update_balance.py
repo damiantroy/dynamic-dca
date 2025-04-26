@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script
 # Description: This script updates the bank balance from Up
 import json
 import requests
