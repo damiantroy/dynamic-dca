@@ -25,7 +25,7 @@ uv run update_balance
 Update the risk values:
 
 ```bash
-uv run update_risks
+uv run update_risk
 ```
 
 Display the dynamic DCA action to take based on your config:

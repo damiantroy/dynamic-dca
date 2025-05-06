@@ -1,7 +1,6 @@
 #!/usr/bin/env -S uv run --script
 import importlib
 import json
-import requests
 import logging
 import argparse
 
@@ -10,6 +9,7 @@ def load_provider(path):
     module_name, class_name = path.rsplit(".", 1)
     module = importlib.import_module(module_name)
     return getattr(module, class_name)
+
 
 
 def main():
@@ -24,17 +24,17 @@ def main():
     elif args.verbose >= 2:
         logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
-    # Get balance from preferred bank provider
     with open("config/config.json") as f:
         config = json.load(f)
-    BankProviderClass = load_provider(config["provider"]["bank"])
-    bank_provider = BankProviderClass()
-    balance = bank_provider.get_balance()
+    RiskProviderClass = load_provider(config["provider"]["risk"])
+    risk_provider = RiskProviderClass()
+    risk = risk_provider.get_risk()
 
-    # Write the bank balance to a file
-    logging.debug("Saving balance to file")
-    with open("data/bank.json", "w") as f:
-        json.dump({"balance": balance}, f, indent=2)
+    # Write the risk scores to a file
+    if risk:
+        logging.debug("Writing risk scores to file...")
+        with open("data/risk.json", "w") as f:
+            json.dump(risk, f, indent=2)
 
 
 if __name__ == "__main__":

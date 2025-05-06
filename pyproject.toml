@@ -20,7 +20,7 @@ dev = [
 
 [project.scripts]
 update_balance = "dynamic_dca.update_balance:main"
-update_risks = "dynamic_dca.update_risks:main"
+update_risk = "dynamic_dca.update_risk:main"
 dynamic_dca = "dynamic_dca.dynamic_dca:main"
 
 [tool.ruff]
