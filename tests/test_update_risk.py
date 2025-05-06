@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, mock_open, call
 import json
-from dynamic_dca.update_risks import main
+from dynamic_dca.update_risk import main
 
 
 def get_read_data():
@@ -25,7 +25,7 @@ def get_read_data():
 
 
 class TestUpdateRisks(unittest.TestCase):
-    @patch("dynamic_dca.update_risks.requests.get")
+    @patch("dynamic_dca.update_risk.requests.get")
     @patch("builtins.open", new_callable=mock_open)
     def test_main(self, mock_file, mock_get):
         read_data = get_read_data()

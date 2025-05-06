@@ -30,7 +30,7 @@ def get_config():
     Read the configuration file.
     """
     risk_data = read_json_file("data/risk.json")
-    balance_data = read_json_file("data/balance.json")
+    balance_data = read_json_file("data/bank.json")
     config_data = read_json_file("config/config.json")
     balance = balance_data["balance"]
     return risk_data, balance, config_data
