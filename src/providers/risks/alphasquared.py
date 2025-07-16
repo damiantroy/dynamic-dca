@@ -6,7 +6,7 @@ import requests
 from .base_risk import BaseRisk
 
 cache_time = 10 * 60  # 10 minutes
-risk_assets = ["BTC", "ETH"]
+risk_assets = ["BTC", "ETH", "XRP"]
 risk_url_template = "https://alphasquared.io/wp-json/as/v1/asset-info?symbol={}"
 risk_return_field = "current_risk"
 
