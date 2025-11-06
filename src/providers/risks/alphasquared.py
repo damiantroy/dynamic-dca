@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+
 import requests
 
 from .base_risk import BaseRisk

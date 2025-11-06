@@ -1,73 +1,49 @@
-import unittest
-from unittest.mock import patch, mock_open, call
-import json
-from dynamic_dca.update_risk import main
+from unittest.mock import MagicMock, mock_open, patch
+
+from dynamic_dca.update_risk import load_provider, main
 
 
-def get_read_data():
-    return {
-        "config/secrets.json": json.dumps(
-            {
-                "alphasquared": "AbCdEfG...",
-                "up": {
-                    "token": "up:yeah:AbCdEfG...",
-                    "account_id": "99999999-1111-2222-3333-abcdefabcdef",
-                },
-            }
-        ),
-        "data/risk.json": json.dumps(
-            {
-                "BTC": {"risk": 50, "updated": 1717014602.7140715},
-                "ETH": {"risk": 50, "updated": 1717014605.4223795},
-            }
-        ),
-    }
+@patch("requests.get")
+@patch(
+    "builtins.open",
+    new_callable=mock_open,
+    read_data='{"risks":{"alphasquared":"key"}}',
+)
+@patch("json.dump")
+@patch(
+    "builtins.open",
+    new_callable=mock_open,
+    read_data='{"BTC": {"risk": 20.0,"updated":0.0}}',
+)
+def test_load_provider(mock_file, mock_json_dump, mock_secrets, mock_get):
+    mock_response = MagicMock()
+    mock_response.json.return_value = {"current_risk": 20.0}
+    mock_response.status_code = 200
+    mock_get.return_value = mock_response
+
+    RiskProviderClass = load_provider("providers.risks.alphasquared.AlphaSquared")
+    risk_provider = RiskProviderClass()
+
+    assert risk_provider.get_risk() is not None
+    assert risk_provider.get_risk()["BTC"]["risk"] == 20.0
 
 
-class TestUpdateRisks(unittest.TestCase):
-    @patch("dynamic_dca.update_risk.requests.get")
-    @patch("builtins.open", new_callable=mock_open)
-    def test_main(self, mock_file, mock_get):
-        read_data = get_read_data()
+@patch("json.dump")
+@patch(
+    "builtins.open",
+    new_callable=mock_open,
+    read_data='{"provider": {"risk": "providers.risks.alphasquared.AlphaSquared"}}',
+)
+@patch("dynamic_dca.update_risk.load_provider")
+def test_main(mock_load_provider, mock_file, mock_json_dump):
+    mock_provider = MagicMock()
+    mock_provider.get_risk.return_value = 80.0
+    mock_load_provider.return_value.return_value = mock_provider
+    mock_file.return_value.name = "data/bank.json"
 
-        def mocked_open(file, mode="r", *args, **kwargs):
-            if file in read_data and "r" in mode:
-                return mock_open(read_data=read_data[file]).return_value
-            elif "w" in mode:
-                return mock_open().return_value
-            else:
-                raise FileNotFoundError(f"No such file: '{file}'")
+    main()
 
-        mock_file.side_effect = mocked_open
-
-        mock_response = mock_get.return_value
-        mock_response.status_code = 200
-        mock_response.json.return_value = {"current_risk": 50}
-
-        main()
-
-        self.assertEqual(mock_file.call_count, 3)
-        expected_calls = [
-            call(
-                "https://alphasquared.io/wp-json/as/v1/asset-info?symbol=BTC",
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": "AbCdEfG...",
-                    "User-Agent": "Mozilla/5.0",
-                },
-            ),
-            call(
-                "https://alphasquared.io/wp-json/as/v1/asset-info?symbol=ETH",
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": "AbCdEfG...",
-                    "User-Agent": "Mozilla/5.0",
-                },
-            ),
-        ]
-        mock_get.assert_has_calls(expected_calls, any_order=True)
-        self.assertEqual(mock_get.call_count, 2)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    mock_provider.get_risk.assert_called_once()
+    mock_json_dump.assert_called_once()
+    args, _ = mock_json_dump.call_args
+    assert args[0] == 80.0

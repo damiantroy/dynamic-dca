@@ -1,8 +1,10 @@
 import json
 import logging
+
 import requests
 
 from .base_bank import BaseBank
+
 
 class UpBank(BaseBank):
     def get_balance(self):
