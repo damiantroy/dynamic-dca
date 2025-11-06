@@ -1,9 +1,8 @@
 #!/usr/bin/env -S uv run --script
+import argparse
 import importlib
 import json
-import requests
 import logging
-import argparse
 
 
 def load_provider(path):
@@ -14,15 +13,23 @@ def load_provider(path):
 
 def main():
     parser = argparse.ArgumentParser(description="Update bank balance from Up")
-    parser.add_argument("-v", "--verbose", help="Increase verbosity", action="count", default=0)
+    parser.add_argument(
+        "-v", "--verbose", help="Increase verbosity", action="count", default=0
+    )
     args = parser.parse_args()
 
     if args.verbose == 0:
-        logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
+        logging.basicConfig(
+            level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s"
+        )
     elif args.verbose == 1:
-        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+        logging.basicConfig(
+            level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+        )
     elif args.verbose >= 2:
-        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+        logging.basicConfig(
+            level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
+        )
 
     # Get balance from preferred bank provider
     with open("config/config.json") as f:
