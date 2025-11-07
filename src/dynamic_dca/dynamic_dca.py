@@ -11,6 +11,14 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Dynamic DCA")
     parser.add_argument("-e", "--email", help="email output", action="store_true")
     parser.add_argument(
+        "-a",
+        "--action",
+        help="filter by one or more actions: 'buy', 'sell', and/or 'hold' (default: all actions)",
+        choices=["buy", "sell", "hold"],
+        nargs="+",
+        default=["buy", "sell", "hold"],
+    )
+    parser.add_argument(
         "-v", "--verbose", help="increase output verbosity", action="count", default=0
     )
     args = parser.parse_args()
@@ -139,7 +147,7 @@ def send_email(output, email_config):
     server.quit()
 
 
-def calculate_buy_and_sell_amounts(risk_data, balance, config):
+def calculate_buy_and_sell_amounts(risk_data, balance, config, action):
     """
     Main function to calculate buy and sell amounts for each asset based on their risk and
     configuration.
@@ -158,6 +166,8 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
         logging.debug(f"Calculating buy and sell amounts for {asset}...")
         risk = risk_data[asset]["risk"]
         if asset_config["buy_risk_min"] <= risk <= asset_config["buy_risk_max"]:
+            if "buy" not in action:
+                continue
             buy_amount = calculate_buy_amount(asset_config, risk, balance)
             output.append(
                 f"Buy ${buy_amount} {asset}, risk {risk} \u2208 ({asset_config['buy_risk_min']},"
@@ -166,6 +176,8 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
             if asset_config.get("buy_reference"):
                 output[-1] += f", Ref: {asset_config['buy_reference']}"
         elif asset_config["sell_risk_min"] <= risk <= asset_config["sell_risk_max"]:
+            if "sell" not in action:
+                continue
             starting_coins = asset_config["starting_coins"]
             sell_percent = calculate_sell_percent(asset_config, risk)
             decimal_places = len(str(starting_coins).split(".")[1])
@@ -178,6 +190,8 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
                 f" ({asset_config['sell_risk_min']},{asset_config['sell_risk_max']})"
             )
         else:
+            if "hold" not in action:
+                continue
             output.append(
                 f"Hold {asset}, risk {risk} \u2209"
                 f" ({asset_config['buy_risk_min']},{asset_config['buy_risk_max']}) \u222a"
@@ -189,7 +203,7 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
 def main():
     args = parse_arguments()
     risk_data, balance, config = get_config()
-    output_data = calculate_buy_and_sell_amounts(risk_data, balance, config)
+    output_data = calculate_buy_and_sell_amounts(risk_data, balance, config, args.action)
     if args.email:
         send_email(output_data, config["email"])
     else:

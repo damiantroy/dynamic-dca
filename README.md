@@ -36,7 +36,7 @@ make dynamic_dca
 Or to e-mail the dynamic DCA actions:
 
 ```bash
-make dynamic_dca -e
+make dynamic_dca-email
 ```
 
 ## Development
