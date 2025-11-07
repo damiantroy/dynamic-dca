@@ -10,7 +10,9 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser(description="Dynamic DCA")
     parser.add_argument("-e", "--email", help="email output", action="store_true")
-    parser.add_argument("-v", "--verbose", help="increase output verbosity", action="count", default=0)
+    parser.add_argument(
+        "-v", "--verbose", help="increase output verbosity", action="count", default=0
+    )
     args = parser.parse_args()
 
     if args.verbose == 0:
@@ -139,7 +141,8 @@ def send_email(output, email_config):
 
 def calculate_buy_and_sell_amounts(risk_data, balance, config):
     """
-    Main function to calculate buy and sell amounts for each asset based on their risk and configuration.
+    Main function to calculate buy and sell amounts for each asset based on their risk and
+    configuration.
 
     Parameters:
     risk_data (dict): The risk data.
@@ -171,7 +174,8 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config):
             output.append(
                 f"Sell {sell_percent}% ({sell_coins}) {asset} (cumulatively),"
                 f" leaving {remaining_coins} {asset},"
-                f" risk {risk} \u2208 ({asset_config['sell_risk_min']},{asset_config['sell_risk_max']})"
+                f" risk {risk} \u2208"
+                f" ({asset_config['sell_risk_min']},{asset_config['sell_risk_max']})"
             )
         else:
             output.append(

@@ -49,7 +49,9 @@ class AlphaSquared(BaseRisk):
                 }
                 risks_updated = True
             else:
-                logging.error(f"Error getting risk for {asset}: {response.status_code}: {response.text}")
+                logging.error(
+                    f"Error getting risk for {asset}: {response.status_code}: {response.text}"
+                )
 
         if risks_updated:
             return risk
