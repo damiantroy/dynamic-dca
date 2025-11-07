@@ -4,7 +4,6 @@ where the risk index is from [AlphaSquared](https://alphasquared.io/), and the b
 bank named [Up Bank](https://up.com.au/).
 
 Pre-requisites:
-* Python 3.10+
 * `uv`
 
 ## Config
@@ -19,25 +18,25 @@ following config files:
 To update your bank balance:
 
 ```bash
-uv run update_balance
+make update_balance
 ```
 
 Update the risk values:
 
 ```bash
-uv run update_risk
+make update_risk
 ```
 
 Display the dynamic DCA action to take based on your config:
 
 ```bash
-uv run dynamic_dca
+make dynamic_dca
 ```
 
 Or to e-mail the dynamic DCA actions:
 
 ```bash
-uv run dynamic_dca -e
+make dynamic_dca -e
 ```
 
 ## Development
