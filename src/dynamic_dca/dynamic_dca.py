@@ -10,23 +10,15 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser(description="Dynamic DCA")
     parser.add_argument("-e", "--email", help="email output", action="store_true")
-    parser.add_argument(
-        "-v", "--verbose", help="increase output verbosity", action="count", default=0
-    )
+    parser.add_argument("-v", "--verbose", help="increase output verbosity", action="count", default=0)
     args = parser.parse_args()
 
     if args.verbose == 0:
-        logging.basicConfig(
-            level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s"
-        )
+        logging.basicConfig(level=logging.ERROR, format="%(asctime)s - %(levelname)s - %(message)s")
     elif args.verbose == 1:
-        logging.basicConfig(
-            level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-        )
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
     elif args.verbose >= 2:
-        logging.basicConfig(
-            level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
-        )
+        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
     return args
 
@@ -63,15 +55,11 @@ def calculate_buy_amount(asset_config, risk, balance):
     risk_range = buy_risk_max - buy_risk_min
     risk_difference = buy_risk_max - risk
     risk_proportion = risk_difference / risk_range
-    buy_percentage = (
-        risk_proportion * (buy_max_percent - buy_min_percent)
-    ) + buy_min_percent
+    buy_percentage = (risk_proportion * (buy_max_percent - buy_min_percent)) + buy_min_percent
     logging.debug(f"Buy percentage: {buy_percentage}")
     buy_amount = balance * (buy_percentage / 100)
     if buy_amount < buy_min_order:
-        logging.debug(
-            f"Buy amount ({buy_amount}) is less than the minimum order ({buy_min_order})"
-        )
+        logging.debug(f"Buy amount ({buy_amount}) is less than the minimum order ({buy_min_order})")
         buy_amount = 0
     logging.debug(f"Buy amount: {buy_amount}")
     return int(buy_amount)
@@ -96,9 +84,7 @@ def calculate_sell_percent(asset_config, risk):
     risk_range = sell_risk_max - sell_risk_min
     risk_difference = risk - sell_risk_min
     risk_proportion = risk_difference / risk_range
-    sell_percentage = (
-        risk_proportion * (sell_max_percent - sell_min_percent)
-    ) + sell_min_percent
+    sell_percentage = (risk_proportion * (sell_max_percent - sell_min_percent)) + sell_min_percent
     return round(sell_percentage, 2)
 
 

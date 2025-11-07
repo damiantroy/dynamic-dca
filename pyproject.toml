@@ -14,12 +14,17 @@ dev = [
     "pytest",
 ]
 
-[project.scripts]
-update_balance = "dynamic_dca.update_balance:main"
-update_risk = "dynamic_dca.update_risk:main"
-dynamic_dca = "dynamic_dca.dynamic_dca:main"
-
-[tool.ruff]
+[tool.black]
 line-length = 120
-indent-width = 4
-exclude = [".venv", ".idea"]
+target-version = ["py312"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.venv
+  | build
+  | dist
+)/
+'''
