@@ -27,16 +27,12 @@ Update the risk values:
 make update_risk
 ```
 
-Display the dynamic DCA action to take based on your config:
+Some examples to run the Dynamic DCA report:
 
 ```bash
 make dynamic_dca
-```
-
-Or to e-mail the dynamic DCA actions:
-
-```bash
 make dynamic_dca-email
+./src/dynamic_dca/dynamic_dca.py -a sell buy
 ```
 
 ## Development
