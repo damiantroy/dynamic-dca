@@ -180,8 +180,14 @@ def calculate_buy_and_sell_amounts(risk_data, balance, config, action):
                 continue
             starting_coins = asset_config["starting_coins"]
             sell_percent = calculate_sell_percent(asset_config, risk)
-            decimal_places = len(str(starting_coins).split(".")[1])
-            sell_coins = round(starting_coins * (sell_percent / 100), decimal_places)
+            sell_coins = (starting_coins * sell_percent) / 100
+            decimal_places = (
+                0
+                if isinstance(starting_coins, int) or starting_coins.is_integer()
+                else len(str(starting_coins).split(".")[1])
+            )
+            decimal_places = min(max(decimal_places, 1), 8)
+            sell_coins = round(sell_coins, decimal_places)
             remaining_coins = round(starting_coins - sell_coins, decimal_places)
             output.append(
                 f"Sell {sell_percent}% ({sell_coins}) {asset} (cumulatively),"
