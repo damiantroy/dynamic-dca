@@ -210,6 +210,9 @@ def main():
     args = parse_arguments()
     risk_data, balance, config = get_config()
     output_data = calculate_buy_and_sell_amounts(risk_data, balance, config, args.action)
+    if not output_data:
+        logging.info("No actions to take")
+        return
     if args.email:
         send_email(output_data, config["email"])
     else:
