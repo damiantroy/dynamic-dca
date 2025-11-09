@@ -31,8 +31,8 @@ Some examples to run the Dynamic DCA report:
 
 ```bash
 make dynamic_dca
-make dynamic_dca-email
-./src/dynamic_dca/dynamic_dca.py -a sell buy
+./src/dynamic_dca/dynamic_dca.py --email
+./src/dynamic_dca/dynamic_dca.py --action sell buy
 ```
 
 ## Development

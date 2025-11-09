@@ -22,7 +22,3 @@ update_risk:
 .PHONY: dynamic_dca
 dynamic_dca:
 	uv run src/dynamic_dca/dynamic_dca.py
-
-.PHONY: dynamic_dca-email
-dynamic_dca-email:
-	uv run src/dynamic_dca/dynamic_dca.py -e
