@@ -1,12 +1,24 @@
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import MagicMock, Mock, mock_open, patch
 
 from dynamic_dca.update_balance import load_provider, main
 
 
-def test_load_provider():
+@patch("importlib.import_module")
+def test_load_provider(mock_import_module):
+    # Setup mock module and class
+    mock_module = Mock()
+    mock_bank_provider = MagicMock()
+    mock_bank_provider.return_value.get_balance.return_value = 1000.0
+    mock_module.UpBank = mock_bank_provider
+    mock_import_module.return_value = mock_module
+
+    # Test loading the provider
     BankProviderClass = load_provider("providers.banks.up_bank.UpBank")
     bank_provider = BankProviderClass()
-    assert bank_provider.get_balance() is not None
+
+    # Verify the provider was loaded and get_balance returns expected value
+    assert bank_provider.get_balance() == 1000.0
+    mock_bank_provider.return_value.get_balance.assert_called_once()
 
 
 @patch("json.dump")

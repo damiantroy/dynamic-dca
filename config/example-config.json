@@ -1,30 +1,43 @@
 {
   "asset": {
     "BTC": {
-      "starting_coins": 1,
+      "starting_coins": 1.000,
       "buy_risk_min": 0,
       "buy_risk_max": 40,
       "buy_min_order": 30,
       "buy_min_percent": 0,
       "buy_max_percent": 50,
       "buy_reference": "ABCDEF",
-      "sell_risk_min": 60,
+      "sell_risk_min": 70,
       "sell_risk_max": 100,
-      "sell_min_percent": 10,
-      "sell_max_percent": 100
+      "sell_min_percent": 0,
+      "sell_max_percent": 80
     },
     "ETH": {
-      "starting_coins": 10,
+      "starting_coins": 10.00,
       "buy_risk_min": 0,
       "buy_risk_max": 40,
       "buy_min_order": 30,
       "buy_min_percent": 0,
       "buy_max_percent": 50,
       "buy_reference": "GHIJKL",
-      "sell_risk_min": 60,
+      "sell_risk_min": 70,
       "sell_risk_max": 100,
-      "sell_min_percent": 10,
-      "sell_max_percent": 100
+      "sell_min_percent": 0,
+      "sell_max_percent": 80
+    },
+    "XRP": {
+      "starting_coins": 100.0,
+      "buy_risk_min": 0,
+      "buy_risk_max": 40,
+      "buy_min_order": 30,
+      "buy_min_percent": 0,
+      "buy_max_percent": 50,
+      "buy_reference": "MNOPQR",
+      "sell_risk_min": 70,
+      "sell_risk_max": 100,
+      "sell_min_percent": 0,
+      "sell_max_percent": 80
     }
   },
   "email": {
@@ -33,5 +46,9 @@
     "subject": "Crypto Dynamic DCA",
     "smtp_server": "localhost",
     "smtp_port": 25
+  },
+  "provider": {
+    "bank": "providers.banks.up_bank.UpBank",
+    "risk": "providers.risks.alphasquared.AlphaSquared"
   }
 }
